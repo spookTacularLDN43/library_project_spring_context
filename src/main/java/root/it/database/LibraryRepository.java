@@ -6,15 +6,18 @@ import root.it.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class LibraryRepository {
     private List<Book> bookList = new ArrayList<>();
     private List<User> userList = new ArrayList<>();
+    private List<Book> usersBooks = new ArrayList<>();
     private static final LibraryRepository libraryRepository = new LibraryRepository();
 
     public LibraryRepository() {
         addBooks();
         addDefaultUsers();
+
     }
 
     private void addBooks() {
@@ -28,7 +31,7 @@ public class LibraryRepository {
     }
 
     private void addDefaultUsers() {
-        userList.add(new User("Maja", DigestUtils.md5Hex("abc123")));
+        userList.add(new User("123", DigestUtils.md5Hex("123")));
     }
 
     public boolean authenticate(String login, String pass) {
@@ -55,8 +58,49 @@ public class LibraryRepository {
         this.userList.add(new User(login, DigestUtils.md5Hex(password)));
     }
 
+    public List<Book> showAllBooks() {
+        return this.bookList;
+    }
+
+    public boolean borrowBook(String title, int pieces) {
+        for (Book currentBook : bookList) {
+            if (currentBook.getTitle().equalsIgnoreCase(title) && currentBook.getNumberOfPieces() >= pieces) {
+                currentBook.setNumberOfPieces(currentBook.getNumberOfPieces() - pieces);
+                usersBooks.add(new Book(currentBook.getTitle(), currentBook.getAuthor(), currentBook.getISBN(), pieces, currentBook.getCategory()));
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean returnBook(String title, int pieces) {
+        for (Book currentBook : usersBooks) {
+            if (currentBook.getTitle().equals(title) && currentBook.getNumberOfPieces() >= pieces) {
+                currentBook.setNumberOfPieces(currentBook.getNumberOfPieces() - pieces);
+                addPieces(title, pieces);
+                if (currentBook.getNumberOfPieces()== 0){
+                    usersBooks.remove(currentBook);
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void addPieces(String title, int pieces) {
+        for (Book currBook : bookList) {
+            if (currBook.getTitle().equals(title)) {
+                currBook.setNumberOfPieces(currBook.getNumberOfPieces() + pieces);
+            }
+        }
+    }
+
+    public List<Book> showUsersBooks() {
+        return this.usersBooks;
+    }
 
     public static LibraryRepository getInstance() {
         return libraryRepository;
     }
 }
+

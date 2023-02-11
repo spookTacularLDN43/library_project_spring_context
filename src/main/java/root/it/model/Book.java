@@ -61,4 +61,10 @@ public class Book {
         REPORTAGE,
         CHILDREN
     }
+
+    @Override
+    public String toString() {
+        return "Title: " + title + ", Author: " + author + ", ISBN: " + ISBN + ", Pieces: " + numberOfPieces +
+                ", Category: " + category;
+    }
 }

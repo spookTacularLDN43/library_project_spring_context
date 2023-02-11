@@ -1,7 +1,9 @@
 package root.it.gui;
 
 import root.it.database.LibraryRepository;
+import root.it.model.Book;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class GUI {
@@ -52,6 +54,59 @@ public class GUI {
     }
 
     private static void showMainMenu() {
-        System.out.println("Menu glowne");
+        System.out.println("1. Show all books");
+        System.out.println("2. Borrow a book");
+        System.out.println("3. Return a book");
+        System.out.println("4. Show my books");
+        System.out.println("5. Exit");
+
+        switch (scanner.nextLine()) {
+            case "1":
+                List<Book> bookList = LibraryRepository.getInstance().showAllBooks();
+                for (Book currentBook : bookList) {
+                    System.out.println(currentBook);
+                }
+                System.out.println();
+                showMainMenu();
+                break;
+            case "2":
+                System.out.println("Enter the title");
+                String title = scanner.nextLine();
+                System.out.println("Enter enter the number of pieces");
+                int pieces = Integer.parseInt(scanner.nextLine());
+                boolean borrowResult = LibraryRepository.getInstance().borrowBook(title, pieces);
+                if(borrowResult){
+                    System.out.println("Borrowed");
+                }else {
+                    System.out.println("Something went wrong, try again.");
+                }
+                System.out.println();
+                showMainMenu();
+                break;
+            case "3":
+                System.out.println("Enter the title");
+                String titleReturn = scanner.nextLine();
+                System.out.println("Enter enter the number of pieces");
+                int piecesReturn = Integer.parseInt(scanner.nextLine());
+                boolean returnResult = LibraryRepository.getInstance().returnBook(titleReturn, piecesReturn);
+                if(returnResult){
+                    System.out.println("Returned");
+                }else {
+                    System.out.println("Something went wrong, try again.");
+                }
+                System.out.println();
+                showMainMenu();
+                break;
+            case "4":
+                List<Book> usersBookList = LibraryRepository.getInstance().showUsersBooks();
+                for (Book currentBook:usersBookList) {
+                    System.out.println(currentBook);
+                }
+                showMainMenu();
+                break;
+            case "5":
+                System.exit(0);
+        }
+
     }
 }

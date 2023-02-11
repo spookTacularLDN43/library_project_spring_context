@@ -1,5 +1,9 @@
 package root.it;
 
-public class App {
+import root.it.gui.GUI;
 
+public class App {
+    public static void main(String[] args) {
+        GUI.showLoginMenu();
+    }
 }

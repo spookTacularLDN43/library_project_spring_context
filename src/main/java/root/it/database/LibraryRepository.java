@@ -42,8 +42,16 @@ public class LibraryRepository {
         return false;
     }
 
-    public boolean checkLoginAvailability(){
-
+    public boolean checkLoginAvailability(String login) {
+        for (User currentUser : userList) {
+            if (currentUser.getLogin().equals(login)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    public void addNewUser(String login, String password){
+        this.userList.add(new User(login, DigestUtils.md5Hex(password)));
     }
 
 

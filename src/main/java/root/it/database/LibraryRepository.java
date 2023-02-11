@@ -50,7 +50,8 @@ public class LibraryRepository {
         }
         return true;
     }
-    public void addNewUser(String login, String password){
+
+    public void addNewUser(String login, String password) {
         this.userList.add(new User(login, DigestUtils.md5Hex(password)));
     }
 

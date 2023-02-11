@@ -20,11 +20,11 @@ public class GUI {
                 System.out.println("Enter your password:");
                 String password = scanner.nextLine();
                 boolean authenticationResult = LibraryRepository.getInstance().authenticate(login, password);
-                if(authenticationResult){
+                if (authenticationResult) {
                     System.out.println("Login successful");
                     System.out.println();
                     showMainMenu();
-                }else {
+                } else {
                     System.out.println("Invalid credentials, try again.");
                     System.out.println();
                     showLoginMenu();
@@ -34,9 +34,9 @@ public class GUI {
                 System.out.println("Enter login");
                 String newLogin = scanner.nextLine();
                 boolean availability = LibraryRepository.getInstance().checkLoginAvailability(newLogin);
-                if (!availability){
+                if (!availability) {
                     System.out.println("Login taken");
-                }else {
+                } else {
                     System.out.println("Enter password");
                     String newPassword = scanner.nextLine();
                     LibraryRepository.getInstance().addNewUser(newLogin, newPassword);
@@ -51,7 +51,7 @@ public class GUI {
         }
     }
 
-    private static void showMainMenu(){
+    private static void showMainMenu() {
         System.out.println("Menu glowne");
     }
 }

@@ -1,18 +1,18 @@
 package root.it.database;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.springframework.stereotype.Component;
 import root.it.model.Book;
 import root.it.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-public class LibraryRepository {
+@Component
+public class LibraryRepository implements ILibraryRepository {
     private List<Book> bookList = new ArrayList<>();
     private List<User> userList = new ArrayList<>();
     private List<Book> usersBooks = new ArrayList<>();
-    private static final LibraryRepository libraryRepository = new LibraryRepository();
 
     public LibraryRepository() {
         addBooks();
@@ -62,12 +62,23 @@ public class LibraryRepository {
         return this.bookList;
     }
 
+    boolean flag = false;
+
     public boolean borrowBook(String title, int pieces) {
         for (Book currentBook : bookList) {
-            if (currentBook.getTitle().equalsIgnoreCase(title) && currentBook.getNumberOfPieces() >= pieces) {
+            if (currentBook.getTitle().equalsIgnoreCase(title) && currentBook.getNumberOfPieces() >= pieces && !flag) {
                 currentBook.setNumberOfPieces(currentBook.getNumberOfPieces() - pieces);
                 usersBooks.add(new Book(currentBook.getTitle(), currentBook.getAuthor(), currentBook.getISBN(), pieces, currentBook.getCategory()));
+                flag = true;
                 return true;
+            } else {
+                for (Book currentUserBook : usersBooks) {
+                    if (currentBook.getTitle().equals(currentUserBook.getTitle()) && currentBook.getNumberOfPieces() >= pieces) {
+                        currentBook.setNumberOfPieces(currentBook.getNumberOfPieces() - pieces);
+                        currentUserBook.setNumberOfPieces(currentUserBook.getNumberOfPieces() + pieces);
+                        return true;
+                    }
+                }
             }
         }
         return false;
@@ -78,7 +89,7 @@ public class LibraryRepository {
             if (currentBook.getTitle().equals(title) && currentBook.getNumberOfPieces() >= pieces) {
                 currentBook.setNumberOfPieces(currentBook.getNumberOfPieces() - pieces);
                 addPieces(title, pieces);
-                if (currentBook.getNumberOfPieces()== 0){
+                if (currentBook.getNumberOfPieces() == 0) {
                     usersBooks.remove(currentBook);
                 }
                 return true;
@@ -99,8 +110,5 @@ public class LibraryRepository {
         return this.usersBooks;
     }
 
-    public static LibraryRepository getInstance() {
-        return libraryRepository;
-    }
 }
 
